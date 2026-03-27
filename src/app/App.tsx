@@ -1,6 +1,9 @@
 import { HorseCard } from "./components/HorseCard";
-import { HorseIcon } from "./components/HorseIcon";
 import { Clock, Database, TrendingUp } from "lucide-react";
+
+const logoSrc = "/equibase-logo.png";
+const footerLogoSrc = "/footer-logo.png";
+
 
 // ── Embedded horse images ──
 const IMGS: Record<string, string> = {
@@ -29,15 +32,15 @@ const HORSES_DATA = [
     track: "Sam Houston Race Park", raceDistance: "Race 5",
     raceInfo: "MAR 27 • SAM HOUSTON RACE PARK • RACE 5",
     metrics: [
+      { label: "Stride Length",value: "7.34m",    stars: 4, percentile: "77th", isHighlighted: true },
       { label: "Early Speed", value: "16.75 m/s", stars: 3, percentile: "62nd" },
       { label: "Late Speed",  value: "15.20 m/s", stars: 3, percentile: "53rd" },
       { label: "Speed Change",value: "-1.55 m/s", stars: 2, percentile: "45th" },
       { label: "Extra Dist.", value: "12.5m",      stars: 1, percentile: "13th" },
-      { label: "Stride Length",value: "7.34m",    stars: 4, percentile: "77th", isHighlighted: true },
     ],
     pastRaces: [2, 3, 6], pastRaceDetails: ["2nd/8", "3rd/7", "6th/8"],
     winProbability: 13.1, morningLineOdds: "5/1", morningLineProbability: "16.7%", edge: "-4%",
-    insight: "Brock On By bursts out fast — 62nd percentile early speed — and has one of the longest strides in this race (77th percentile). Think of him like a sprinter: powerful start, powerful stride. He is the model top pick heading into Race 5.",
+    insight: "Brock On By bursts out fast. 62nd percentile early speed. and has one of the longest strides in this race (77th percentile). Think of him like a sprinter: powerful start and powerful stride.",
   },
   {
     id: 2, name: "Macho Grande", archetype: "THE EFFICIENT MOVER",
@@ -46,15 +49,15 @@ const HORSES_DATA = [
     track: "Sam Houston Race Park", raceDistance: "Race 5",
     raceInfo: "MAR 27 • SAM HOUSTON RACE PARK • RACE 5",
     metrics: [
+      { label: "Stride Length",value: "7.35m",     stars: 4, percentile: "78th", isHighlighted: true },
       { label: "Early Speed",  value: "15.91 m/s", stars: 1, percentile: "21st" },
       { label: "Late Speed",   value: "15.07 m/s", stars: 2, percentile: "48th" },
       { label: "Speed Change", value: "-0.84 m/s", stars: 3, percentile: "69th" },
       { label: "Extra Dist.",  value: "8.1m",       stars: 2, percentile: "37th" },
-      { label: "Stride Length",value: "7.35m",     stars: 4, percentile: "78th", isHighlighted: true },
     ],
     pastRaces: [3, 1, 8], pastRaceDetails: ["3rd/5", "1st/7", "8th/8"],
     winProbability: 11.2, morningLineOdds: "6/1", morningLineProbability: "14.3%", edge: "-3%",
-    insight: "Macho Grande does not blast out of the gate, but his stride length ranks 78th percentile — one of the most efficient movers here. He won two races ago. The wide swings in finish position are worth watching, but his GPS efficiency numbers say he belongs in this race.",
+    insight: "Macho Grande does not blast out of the gate, but his stride length ranks 78th percentile. one of the most efficient movers here. He won two races ago. The inconsistent finishes are worth noting but his efficiency numbers say he belongs.",
   },
   {
     id: 3, name: "Mo Saturdays", archetype: "THE RAIL HUGGER",
@@ -63,15 +66,15 @@ const HORSES_DATA = [
     track: "Sam Houston Race Park", raceDistance: "Race 5",
     raceInfo: "MAR 27 • SAM HOUSTON RACE PARK • RACE 5",
     metrics: [
+      { label: "Stride Length",value: "7.16m",     stars: 3, percentile: "53rd", isHighlighted: true },
       { label: "Early Speed",  value: "16.92 m/s", stars: 3, percentile: "70th" },
       { label: "Late Speed",   value: "14.51 m/s", stars: 2, percentile: "27th" },
       { label: "Speed Change", value: "-2.41 m/s", stars: 1, percentile: "20th" },
       { label: "Extra Dist.",  value: "2.3m",       stars: 4, percentile: "83rd" },
-      { label: "Stride Length",value: "7.16m",     stars: 3, percentile: "53rd", isHighlighted: true },
     ],
     pastRaces: [4, 5, 3], pastRaceDetails: ["4th/7", "5th/5", "3rd/6"],
     winProbability: 10.9, morningLineOdds: "8/1", morningLineProbability: "11.1%", edge: "-0.2%",
-    insight: "Mo Saturdays runs the tightest path in the field — 83rd percentile extra distance means almost zero wasted ground. His early speed is elite (70th percentile) but he fades late. If the pace sets up slow and he conserves energy, he has a real upset chance.",
+    insight: "Mo Saturdays runs the tightest path in the field. 83rd percentile extra distance means almost zero wasted ground. His early speed is elite (70th percentile) but he fades late. If the pace is slow and he conserves energy he has a real upset chance.",
   },
   {
     id: 4, name: "Covert Kat", archetype: "THE DARK HORSE",
@@ -80,15 +83,15 @@ const HORSES_DATA = [
     track: "Sam Houston Race Park", raceDistance: "Race 5",
     raceInfo: "MAR 27 • SAM HOUSTON RACE PARK • RACE 5",
     metrics: [
+      { label: "Stride Length",value: "7.14m",     stars: 3, percentile: "51st", isHighlighted: true },
       { label: "Early Speed",  value: "16.91 m/s", stars: 3, percentile: "70th" },
       { label: "Late Speed",   value: "15.48 m/s", stars: 3, percentile: "64th" },
       { label: "Speed Change", value: "-1.43 m/s", stars: 2, percentile: "49th" },
       { label: "Extra Dist.",  value: "12.1m",      stars: 1, percentile: "15th" },
-      { label: "Stride Length",value: "7.14m",     stars: 3, percentile: "51st", isHighlighted: true },
     ],
     pastRaces: [5], pastRaceDetails: ["5th/7"],
     winProbability: 6.6, morningLineOdds: "15/1", morningLineProbability: "6.3%", edge: "+0.3%",
-    insight: "Covert Kat has only one GPS race but the numbers are intriguing — strong early AND late speed, both in the 60th-70th percentile. Limited history makes her a risk, but her GPS profile rivals the favorites. A small win bet at 15/1 has real value.",
+    insight: "Covert Kat has only one GPS race but the numbers are intriguing. strong early AND late speed, both in the 60th-70th percentile. Limited history makes her a risk but her numbers rival the favorites. Good value at 15/1.",
   },
   {
     id: 5, name: "Nautical Moon", archetype: "THE STAMINA MACHINE",
@@ -97,15 +100,15 @@ const HORSES_DATA = [
     track: "Sam Houston Race Park", raceDistance: "Race 5",
     raceInfo: "MAR 27 • SAM HOUSTON RACE PARK • RACE 5",
     metrics: [
+      { label: "Stride Length",value: "7.46m",     stars: 4, percentile: "88th", isHighlighted: true },
       { label: "Early Speed",  value: "15.15 m/s", stars: 1, percentile: "4th" },
       { label: "Late Speed",   value: "14.86 m/s", stars: 2, percentile: "40th" },
       { label: "Speed Change", value: "-0.28 m/s", stars: 4, percentile: "83rd" },
       { label: "Extra Dist.",  value: "8.5m",       stars: 2, percentile: "34th" },
-      { label: "Stride Length",value: "7.46m",     stars: 4, percentile: "88th", isHighlighted: true },
     ],
     pastRaces: [2, 1], pastRaceDetails: ["2nd/7", "1st/10"],
     winProbability: 5.9, morningLineOdds: "20/1", morningLineProbability: "4.8%", edge: "+1.1%",
-    insight: "Nautical Moon has the longest stride in the field — 88th percentile. She barely slows down at the finish (83rd percentile speed change) and won her last race in a 10-horse field. The 20/1 odds feel too long for a horse with these GPS numbers. Best value longshot on the card.",
+    insight: "Nautical Moon has the longest stride in the field. 88th percentile. She barely slows down at the finish (83rd percentile speed change) and won her last race in a 10-horse field. The 20/1 odds feel too long for a horse with these numbers. Best value longshot on the card.",
   },
   {
     id: 6, name: "Samsplayerslounge", archetype: "THE LONGSHOT",
@@ -114,15 +117,15 @@ const HORSES_DATA = [
     track: "Sam Houston Race Park", raceDistance: "Race 5",
     raceInfo: "MAR 27 • SAM HOUSTON RACE PARK • RACE 5",
     metrics: [
+      { label: "Stride Length",value: "7.03m",     stars: 2, percentile: "36th", isHighlighted: true },
       { label: "Early Speed",  value: "16.15 m/s", stars: 2, percentile: "31st" },
       { label: "Late Speed",   value: "15.25 m/s", stars: 3, percentile: "55th" },
       { label: "Speed Change", value: "-0.90 m/s", stars: 3, percentile: "67th" },
       { label: "Extra Dist.",  value: "3.2m",       stars: 4, percentile: "76th" },
-      { label: "Stride Length",value: "7.03m",     stars: 2, percentile: "36th", isHighlighted: true },
     ],
     pastRaces: [9, 8], pastRaceDetails: ["9th/9", "8th/8"],
     winProbability: 2.8, morningLineOdds: "30/1", morningLineProbability: "3.2%", edge: "-0.4%",
-    insight: "Recent finishes have been at the back of the pack, but GPS shows decent path efficiency (76th percentile) and holds speed reasonably late. A tough ask for a win, but for someone exploring horse racing, this is a classic longshot — low cost, high excitement.",
+    insight: "Recent finishes have been at the back of the pack, but GPS shows decent path efficiency (76th percentile) and holds speed reasonably late. A tough ask for a win, but for someone exploring horse racing, this is a classic longshot. low cost, high excitement.",
   },
 
   // ══════════════════════════════════════
@@ -143,7 +146,7 @@ const HORSES_DATA = [
     ],
     pastRaces: [1, 2], pastRaceDetails: ["1st/8", "2nd/9"],
     winProbability: 17.9, morningLineOdds: "5/2", morningLineProbability: "28.6%", edge: "-11%",
-    insight: "Ells is the morning line favorite for good reason — 1st and 2nd in both career races with a perfect 100% top-3 rate. She has the best average finish position in the entire field. Only two career races means she is still proving herself, but every sign so far says she belongs at the front.",
+    insight: "Ells is the morning line favorite for good reason. 1st and 2nd in both career races with a perfect 100% top-3 rate. She has the best average finish in the field. Only two career races means she is still proving herself but every sign points to the front.",
   },
   {
     id: 8, name: "Twelve Volt", archetype: "THE CONSISTENT ONE",
@@ -160,7 +163,7 @@ const HORSES_DATA = [
     ],
     pastRaces: [3, 2, 3], pastRaceDetails: ["3rd/10", "2nd/10", "3rd/7"],
     winProbability: 16.1, morningLineOdds: "7/2", morningLineProbability: "22.2%", edge: "-6%",
-    insight: "Twelve Volt has never finished worse than 3rd in three career races — that is remarkable consistency for any horse. No wins yet, but always in the mix. With the most experience of the three traditional horses, she knows how to race. A reliable place or show bet.",
+    insight: "Twelve Volt has never finished worse than 3rd in three career races. that is remarkable consistency for any horse. No wins yet but always in the mix. The most experienced of the three traditional horses. A solid place or show bet.",
   },
   {
     id: 9, name: "Barbacoa", archetype: "THE WILDCARD",
@@ -177,7 +180,7 @@ const HORSES_DATA = [
     ],
     pastRaces: [2, 2, 5], pastRaceDetails: ["2nd/10", "2nd/8", "5th/8"],
     winProbability: 15.5, morningLineOdds: "9/2", morningLineProbability: "18.2%", edge: "-3%",
-    insight: "Barbacoa has been runner-up twice in a row — there is real talent here. No GPS data means less information to work with, but back-to-back 2nd place finishes show she knows how to compete. If she finds that extra gear she has been just missing, an upset is very possible.",
+    insight: "Barbacoa has been runner-up twice in a row. there is real talent here. No GPS data means less information but back to back 2nd place finishes show she can compete. If she finds that extra gear an upset is very possible.",
   },
 ];
 
@@ -192,15 +195,13 @@ export default function App() {
         <div className="max-w-[1280px] mx-auto px-4 py-6">
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-4">
-              <div className="w-16 h-16 rounded-2xl bg-[#c9a84c] flex items-center justify-center shadow-lg">
-                <HorseIcon className="w-9 h-9 text-[#1a3d2b]" />
-              </div>
+              <img src={logoSrc} alt="Equibase" className="w-16 h-16 object-contain rounded-2xl" />
               <div>
                 <h1 className="text-3xl leading-tight" style={{ fontFamily: "var(--font-serif)" }}>
                   EQUI-CARDS
                 </h1>
                 <p className="text-xs text-[#c9a84c] uppercase tracking-wider">
-                  Equibase GPS Intelligence
+                  Sam Houston Race Park · Race 5
                 </p>
               </div>
             </div>
@@ -213,7 +214,7 @@ export default function App() {
                 <h2 className="text-xl mb-1" style={{ fontFamily: "var(--font-serif)" }}>
                   Race 5 · Sam Houston Race Park
                 </h2>
-                <p className="text-sm text-gray-300">March 27, 2026 · GPS Equipped Field</p>
+                <p className="text-sm text-gray-300">March 27, 2026</p>
               </div>
               <div className="flex items-center gap-2 bg-[#c9a84c] text-[#1a3d2b] px-4 py-2 rounded-xl">
                 <Clock size={18} />
@@ -226,7 +227,7 @@ export default function App() {
             <div className="grid grid-cols-3 gap-4">
               <div className="flex items-center gap-3 bg-white/10 rounded-xl px-4 py-3">
                 <div className="w-10 h-10 rounded-full bg-[#c9a84c]/20 flex items-center justify-center">
-                  <HorseIcon className="w-5 h-5 text-[#c9a84c]" />
+                  <img src={logoSrc} alt="" className="w-5 h-5 object-contain" />
                 </div>
                 <div>
                   <div className="text-2xl font-bold">{HORSES_DATA.length}</div>
@@ -239,7 +240,7 @@ export default function App() {
                 </div>
                 <div>
                   <div className="text-2xl font-bold">{gpsHorses.length}</div>
-                  <div className="text-xs text-gray-300 uppercase tracking-wider">GPS Coverage</div>
+                  <div className="text-xs text-gray-300 uppercase tracking-wider">GPS Horses</div>
                 </div>
               </div>
               <div className="flex items-center gap-3 bg-white/10 rounded-xl px-4 py-3">
@@ -250,7 +251,7 @@ export default function App() {
                   <div className="text-2xl font-bold">
                     {HORSES_DATA.filter(h => h.isTopPick).length}
                   </div>
-                  <div className="text-xs text-gray-300 uppercase tracking-wider">Top Picks</div>
+                  <div className="text-xs text-gray-300 uppercase tracking-wider">Best Bets</div>
                 </div>
               </div>
             </div>
@@ -268,14 +269,11 @@ export default function App() {
             <h3 className="text-lg font-semibold text-[#1a3d2b]" style={{ fontFamily: "var(--font-serif)" }}>
               GPS-Equipped Horses
             </h3>
-            <span className="text-xs bg-[#1a3d2b] text-[#c9a84c] px-3 py-1 rounded-full font-medium uppercase tracking-wide">
-              {gpsHorses.length} horses · Dark green cards
-            </span>
           </div>
           <p className="text-sm text-gray-500 mb-5 ml-6">
-            Full biomechanical data — stride, speed, path efficiency tracked every 50m
+            Stride, speed, and path data tracked every 50 meters
           </p>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 justify-items-center">
             {gpsHorses.map(horse => (
               <HorseCard key={horse.id} horse={horse} />
             ))}
@@ -287,16 +285,13 @@ export default function App() {
           <div className="flex items-center gap-3 mb-2">
             <div className="w-3 h-3 rounded-full bg-[#7f9a5a]" />
             <h3 className="text-lg font-semibold text-[#7f9a5a]" style={{ fontFamily: "var(--font-serif)" }}>
-              Traditional Horses — No GPS
+              Traditional Horses
             </h3>
-            <span className="text-xs bg-[#7f9a5a] text-white px-3 py-1 rounded-full font-medium uppercase tracking-wide">
-              {tradHorses.length} horses · Light green cards
-            </span>
           </div>
           <p className="text-sm text-gray-500 mb-5 ml-6">
-            Estimated from pace figures, finish positions and career record
+            Based on pace figures, finish positions, and career record
           </p>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 justify-items-center">
             {tradHorses.map(horse => (
               <HorseCard key={horse.id} horse={horse} />
             ))}
@@ -309,14 +304,14 @@ export default function App() {
       <footer className="bg-[#1a3d2b] text-white mt-16 py-10">
         <div className="max-w-[1280px] mx-auto px-4 text-center">
           <div className="flex items-center justify-center gap-4 mb-4">
-            <HorseIcon className="w-8 h-8 text-[#c9a84c]" />
+            <img src={footerLogoSrc} alt="Equibase" className="w-10 h-10 object-contain" style={{ mixBlendMode: "luminosity", opacity: 0.9 }} />
             <span className="text-2xl text-[#c9a84c] tracking-widest" style={{ fontFamily: "var(--font-serif)" }}>
               EQUIBASE
             </span>
-            <HorseIcon className="w-8 h-8 text-[#c9a84c]" />
+            <img src={footerLogoSrc} alt="" className="w-10 h-10 object-contain" style={{ mixBlendMode: "luminosity", opacity: 0.9 }} />
           </div>
-          <p className="text-sm text-gray-400">GPS-powered analytics · Sam Houston Race Park · March 27 2026</p>
-          <p className="text-xs text-gray-500 mt-2">Percentiles based on 27,800 horse-race GPS records (Dec 2025 – Mar 2026)</p>
+          <p className="text-sm text-gray-400">Sam Houston Race Park · Race 5 · March 27, 2026</p>
+          <p className="text-xs text-gray-500 mt-2">For entertainment purposes only. Please gamble responsibly.</p>
         </div>
       </footer>
     </div>
