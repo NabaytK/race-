@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Race IQ™ — Equibase GPS Intelligence</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --g:#1a3d2b; --gm:#2d5a3d; --gl:#3a7a54;
+  --gold:#c9a84c; --gold-l:#e8d5a0; --gold-bg:rgba(201,168,76,0.08);
+  --w:#fff; --blk:#111;
+  --bg:#f4f3f0; --bg2:#ececea;
+  --div:#e4e4e0;
+  --gt:#6b6b6b; --gtt:#999;
+  --gbg:#f0faf4; --gbr:#b8e0c8; --gtx:#1a5c38;
+  --red:#8b2020; --redbg:#fff5f5; --redbr:#f0c0c0;
+  --shadow:0 2px 12px rgba(0,0,0,0.08);
+  --shadow-lg:0 8px 32px rgba(0,0,0,0.14);
+  --r:12px; --r-lg:18px;
+}
+html{scroll-behavior:smooth;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--blk);min-height:100vh;overflow-x:hidden;}
+
+/* ════ SCREENS ════ */
+.screen{display:none;min-height:100vh;flex-direction:column;}
+.screen.active{display:flex;}
+
+/* ════ SPLASH ════ */
+#splash{background:var(--g);align-items:center;justify-content:center;flex-direction:column;gap:0;cursor:pointer;position:relative;overflow:hidden;}
+.splash-ht{position:absolute;inset:0;opacity:0.07;background-image:repeating-conic-gradient(var(--gl) 0% 25%,transparent 0% 50%);background-size:28px 28px;}
+.splash-inner{position:relative;z-index:1;text-align:center;padding:2rem;animation:fadeUp 0.8s ease both;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px);}to{opacity:1;transform:translateY(0);}}
+.splash-logo-ring{width:96px;height:96px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;margin:0 auto 1.5rem;box-shadow:0 0 0 8px rgba(201,168,76,0.2);}
+.splash-title{font-family:'Playfair Display',serif;font-size:3rem;font-weight:700;color:var(--gold-l);letter-spacing:0.04em;line-height:1;}
+.splash-sub{font-size:0.85rem;color:#8aad99;letter-spacing:0.14em;text-transform:uppercase;margin-top:10px;}
+.splash-divider{width:48px;height:2px;background:var(--gold);margin:1.8rem auto;}
+.splash-tagline{font-family:'Playfair Display',serif;font-style:italic;font-size:1.1rem;color:rgba(255,255,255,0.7);max-width:320px;line-height:1.6;}
+.splash-cta{margin-top:2.5rem;background:var(--gold);color:var(--g);font-family:'DM Sans',sans-serif;font-size:0.85rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:14px 40px;border-radius:50px;border:none;cursor:pointer;transition:transform 0.2s,box-shadow 0.2s;}
+.splash-cta:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(201,168,76,0.4);}
+.splash-equibase{position:absolute;bottom:2rem;font-family:'Playfair Display',serif;font-size:0.75rem;color:rgba(255,255,255,0.3);letter-spacing:0.2em;}
+
+/* ════ NAV ════ */
+.nav{background:var(--g);height:60px;display:flex;align-items:center;justify-content:space-between;padding:0 1.5rem;position:sticky;top:0;z-index:200;border-bottom:2px solid var(--gold);flex-shrink:0;}
+.nav-logo{display:flex;align-items:center;gap:10px;cursor:pointer;}
+.nav-logo-icon{width:34px;height:34px;border-radius:8px;background:var(--gold);display:flex;align-items:center;justify-content:center;}
+.nav-brand{font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:700;color:var(--gold-l);}
+.nav-right{display:flex;align-items:center;gap:8px;}
+.nav-btn{background:none;border:1px solid rgba(255,255,255,0.18);border-radius:8px;color:rgba(255,255,255,0.7);font-size:0.72rem;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;padding:6px 14px;cursor:pointer;transition:all 0.2s;font-family:'DM Sans',sans-serif;}
+.nav-btn:hover,.nav-btn.active{background:rgba(255,255,255,0.12);color:var(--w);border-color:rgba(255,255,255,0.35);}
+.nav-btn.gold{background:var(--gold);color:var(--g);border-color:var(--gold);}
+.live-badge{display:flex;align-items:center;gap:5px;}
+.live-dot{width:7px;height:7px;border-radius:50%;background:#ef4444;animation:pulse 2s infinite;flex-shrink:0;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.3;}}
+.live-txt{font-size:0.65rem;color:#ef9090;letter-spacing:0.08em;text-transform:uppercase;}
+
+/* ════ BOTTOM NAV (mobile feel) ════ */
+.bottom-nav{background:var(--g);display:flex;border-top:1px solid var(--gm);flex-shrink:0;position:sticky;bottom:0;z-index:200;}
+.bnav-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:10px 4px;cursor:pointer;transition:all 0.2s;border:none;background:none;color:rgba(255,255,255,0.45);font-family:'DM Sans',sans-serif;}
+.bnav-item:hover,.bnav-item.active{color:var(--gold);}
+.bnav-icon{font-size:1.3rem;line-height:1;margin-bottom:3px;}
+.bnav-lbl{font-size:0.58rem;letter-spacing:0.06em;text-transform:uppercase;font-weight:600;}
+
+/* ════ MAIN CONTENT AREA ════ */
+.main{flex:1;overflow-y:auto;}
+
+/* ════ HERO BANNER ════ */
+.hero{background:var(--g);padding:1.25rem 1.5rem;position:relative;overflow:hidden;flex-shrink:0;}
+.hero-ht{position:absolute;inset:0;opacity:0.07;background-image:repeating-conic-gradient(var(--gl) 0% 25%,transparent 0% 50%);background-size:20px 20px;}
+.hero-inner{position:relative;z-index:1;display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap;}
+.hero-left{}
+.hero-eyebrow{font-size:0.62rem;color:var(--gold);letter-spacing:0.14em;text-transform:uppercase;font-weight:600;margin-bottom:4px;}
+.hero-title{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:700;color:var(--gold-l);line-height:1.2;}
+.hero-meta{font-size:0.72rem;color:#8aad99;margin-top:4px;line-height:1.6;}
+.hero-stats{display:flex;gap:1rem;align-items:center;}
+.hero-stat{text-align:center;}
+.hstat-val{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700;color:var(--gold);}
+.hstat-lbl{font-size:0.58rem;color:#8aad99;text-transform:uppercase;letter-spacing:0.07em;margin-top:1px;}
+.countdown-box{background:rgba(0,0,0,0.25);border:1px solid rgba(201,168,76,0.3);border-radius:8px;padding:6px 14px;text-align:center;}
+.cd-val{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;color:var(--gold);}
+.cd-lbl{font-size:0.58rem;color:#8aad99;text-transform:uppercase;letter-spacing:0.07em;}
+
+/* ════ SECTION LABELS ════ */
+.section-hdr{display:flex;align-items:center;gap:10px;margin:1.5rem 1.5rem 1rem;}
+.section-hdr-title{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--blk);white-space:nowrap;}
+.section-hdr-line{flex:1;height:1px;background:var(--div);}
+
+/* ════ HORSE CARDS GRID ════ */
+.cards-scroll{padding:0 1.5rem 1.5rem;display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:1.25rem;}
+
+/* ════ HORSE CARD ════ */
+.hcard{background:var(--w);border-radius:var(--r-lg);overflow:hidden;box-shadow:var(--shadow);border:1.5px solid var(--div);cursor:pointer;transition:transform 0.22s,box-shadow 0.22s,border-color 0.22s;position:relative;}
+.hcard:hover{transform:translateY(-5px);box-shadow:var(--shadow-lg);border-color:var(--gold);}
+.hcard.top-pick{border:2.5px solid var(--gold);}
+.top-pick-badge{position:absolute;top:10px;right:10px;background:var(--gold);color:var(--g);font-size:0.58rem;font-weight:700;padding:3px 8px;border-radius:20px;letter-spacing:0.08em;text-transform:uppercase;z-index:5;}
+
+/* Card top green bar */
+.ctop{background:var(--g);height:50px;display:flex;align-items:center;justify-content:space-between;padding:0 14px;position:relative;overflow:hidden;}
+.ctop-ht{position:absolute;inset:0;opacity:0.13;background-image:repeating-conic-gradient(var(--gl) 0% 25%,transparent 0% 50%);background-size:14px 14px;}
+.post-num{width:30px;height:30px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:14px;font-weight:700;color:var(--g);z-index:1;flex-shrink:0;}
+.mode-pill{border-radius:4px;padding:3px 8px;font-size:0.6rem;font-weight:600;letter-spacing:0.06em;z-index:1;}
+.gps-mode{background:rgba(255,255,255,0.12);border:1px solid rgba(168,230,192,0.4);color:#a8e6c0;}
+.proxy-mode{background:rgba(255,255,255,0.08);border:1px solid rgba(240,208,128,0.4);color:#f0d080;}
+.card-odds{font-size:0.78rem;color:var(--gold);font-weight:600;z-index:1;}
+
+/* Photo placeholder */
+.cphoto{height:160px;background:var(--bg2);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;border-bottom:1px solid var(--div);}
+.cam-svg{opacity:0.35;}
+.photo-lbl{font-size:0.62rem;color:var(--gtt);letter-spacing:0.08em;text-transform:uppercase;}
+
+/* Name band */
+.cname-band{padding:10px 14px 8px;border-bottom:1px solid var(--div);}
+.cname{font-family:'Playfair Display',serif;font-size:1.05rem;font-weight:700;color:var(--blk);}
+.carch{font-size:0.62rem;color:var(--g);font-weight:700;letter-spacing:0.1em;text-transform:uppercase;margin-top:2px;}
+
+/* Stats */
+.cstats{padding:8px 14px;border-bottom:1px solid var(--div);}
+.srow{display:flex;align-items:center;margin-bottom:6px;}
+.srow:last-child{margin-bottom:0;}
+.slbl{font-size:0.62rem;color:var(--gt);text-transform:uppercase;letter-spacing:0.05em;width:84px;flex-shrink:0;}
+.sval{font-size:0.72rem;font-weight:600;color:var(--blk);width:64px;flex-shrink:0;}
+.stars{display:flex;gap:2px;}
+.star{width:11px;height:11px;clip-path:polygon(50% 0%,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%);}
+.star.on{background:var(--gold);}
+.star.off{background:#ddd;}
+.hl-row{background:var(--gbg);border-radius:5px;padding:5px 8px;border:1px solid var(--gbr);}
+.hl-row .slbl{color:var(--gtx);}
+.hl-row .sval{color:var(--gtx);}
+.top10{font-size:0.58rem;color:var(--gtx);font-weight:700;margin-left:5px;background:var(--gbg);border:1px solid var(--gbr);border-radius:3px;padding:1px 5px;flex-shrink:0;}
+
+/* Past races */
+.craces{padding:7px 14px;border-bottom:1px solid var(--div);}
+.sec-lbl{font-size:0.6rem;color:var(--g);font-weight:700;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:5px;}
+.rrow{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;}
+.rrow:last-child{margin-bottom:0;}
+.rinfo{font-size:0.67rem;color:var(--gt);}
+.rdelta{font-size:0.67rem;font-weight:600;}
+.dp{font-size:0.67rem;font-weight:600;}
+.dp-pos{color:#1a7a45;}
+.dp-neg{color:var(--gtt);}
+.fdot{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.6rem;font-weight:700;flex-shrink:0;}
+.f1{background:var(--gold);color:var(--w);}
+.f2{background:var(--g);color:var(--w);}
+.f3{background:#4a7c5f;color:var(--w);}
+.fbad{background:var(--bg2);color:var(--gt);}
+
+/* Probability */
+.cprob{padding:7px 14px;border-bottom:1px solid var(--div);display:flex;justify-content:space-between;align-items:center;}
+.prob-n{font-family:'Playfair Display',serif;font-size:1.7rem;font-weight:700;color:var(--g);}
+.prob-sl{font-size:0.6rem;color:var(--gt);text-transform:uppercase;letter-spacing:0.05em;}
+.ml-v{font-size:0.75rem;font-weight:600;color:var(--blk);margin-top:2px;}
+.edge{background:var(--gbg);border:1px solid var(--gbr);border-radius:4px;padding:2px 7px;font-size:0.62rem;color:var(--gtx);font-weight:700;display:inline-block;margin-top:3px;}
+
+/* Summary */
+.csummary{padding:9px 14px;}
+.sum-txt{font-size:0.72rem;color:#444;line-height:1.65;}
+.sum-txt strong{color:var(--g);}
+
+/* Footer */
+.cfoot{background:var(--g);height:40px;display:flex;align-items:center;justify-content:space-between;padding:0 14px;position:relative;overflow:hidden;}
+.cfoot-ht{position:absolute;inset:0;opacity:0.12;background-image:repeating-conic-gradient(var(--gl) 0% 25%,transparent 0% 50%);background-size:14px 14px;}
+.foot-logo{font-family:'Playfair Display',serif;font-size:0.78rem;font-weight:700;color:var(--gold-l);letter-spacing:0.18em;z-index:1;}
+
+/* ════ DETAIL PANEL (slide-in) ════ */
+.detail-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:500;align-items:flex-end;justify-content:center;}
+.detail-overlay.active{display:flex;}
+.detail-panel{background:var(--w);border-radius:24px 24px 0 0;width:100%;max-width:640px;max-height:92vh;overflow-y:auto;box-shadow:0 -8px 40px rgba(0,0,0,0.3);animation:slideUp 0.35s cubic-bezier(0.34,1.56,0.64,1) both;}
+@keyframes slideUp{from{transform:translateY(100%);}to{transform:translateY(0);}}
+.dp-handle{width:40px;height:4px;border-radius:2px;background:var(--div);margin:12px auto 0;}
+.dp-topbar{background:var(--g);padding:16px 20px 14px;position:relative;overflow:hidden;}
+.dp-ht{position:absolute;inset:0;opacity:0.1;background-image:repeating-conic-gradient(var(--gl) 0% 25%,transparent 0% 50%);background-size:16px 16px;}
+.dp-name{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700;color:var(--gold-l);z-index:1;position:relative;}
+.dp-arch{font-size:0.68rem;color:#a8e6c0;letter-spacing:0.1em;text-transform:uppercase;margin-top:3px;z-index:1;position:relative;}
+.dp-close{position:absolute;top:14px;right:16px;background:rgba(255,255,255,0.12);border:none;border-radius:50%;width:32px;height:32px;color:var(--w);font-size:1.1rem;cursor:pointer;z-index:2;display:flex;align-items:center;justify-content:center;}
+.dp-body{padding:1.25rem;}
+.dp-section{margin-bottom:1.25rem;}
+.dp-sec-title{font-size:0.65rem;color:var(--g);font-weight:700;letter-spacing:0.12em;text-transform:uppercase;margin-bottom:8px;padding-bottom:5px;border-bottom:1.5px solid var(--gbr);}
+.dp-text{font-size:0.8rem;color:#444;line-height:1.7;}
+.dp-text strong{color:var(--g);}
+.dp-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:1rem;}
+.dp-stat-box{background:var(--gbg);border:1px solid var(--gbr);border-radius:8px;padding:10px 12px;text-align:center;}
+.dp-stat-box.gold-box{background:var(--gold-bg);border-color:rgba(201,168,76,0.3);}
+.dp-stat-val{font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:700;color:var(--g);}
+.dp-stat-val.gold{color:var(--gold);}
+.dp-stat-lbl{font-size:0.6rem;color:var(--gt);text-transform:uppercase;letter-spacing:0.07em;margin-top:2px;}
+.bet-strip{background:var(--g);border-radius:10px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;}
+.bet-strip-l .bet-title{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;color:var(--gold-l);}
+.bet-strip-l .bet-sub{font-size:0.68rem;color:#8aad99;margin-top:2px;}
+.bet-btn{background:var(--gold);color:var(--g);border:none;border-radius:8px;font-size:0.75rem;font-weight:700;padding:10px 20px;cursor:pointer;letter-spacing:0.06em;text-transform:uppercase;font-family:'DM Sans',sans-serif;transition:transform 0.15s;}
+.bet-btn:hover{transform:scale(1.04);}
+
+/* ════ PAGE: LONESOME ROAD ════ */
+.lr-hero{background:var(--g);padding:2rem 1.5rem;position:relative;overflow:hidden;}
+.lr-ht{position:absolute;inset:0;opacity:0.07;background-image:repeating-conic-gradient(var(--gl) 0% 25%,transparent 0% 50%);background-size:24px 24px;}
+.lr-inner{position:relative;z-index:1;}
+.lr-eyebrow{font-size:0.62rem;color:var(--gold);letter-spacing:0.15em;text-transform:uppercase;font-weight:700;margin-bottom:8px;}
+.lr-title{font-family:'Playfair Display',serif;font-size:2rem;font-weight:700;color:var(--gold-l);line-height:1.15;margin-bottom:10px;}
+.lr-sub{font-size:0.8rem;color:#8aad99;line-height:1.7;max-width:480px;}
+.lr-stats-row{display:flex;gap:12px;flex-wrap:wrap;margin-top:1.5rem;}
+.lr-stat{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:10px;padding:12px 16px;text-align:center;min-width:90px;}
+.lr-stat.hl{border-color:var(--gold);background:rgba(201,168,76,0.1);}
+.lr-stat-val{font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:700;color:var(--gold);}
+.lr-stat.hl .lr-stat-val{color:#7fdf9a;}
+.lr-stat-lbl{font-size:0.58rem;color:#8aad99;text-transform:uppercase;letter-spacing:0.07em;margin-top:2px;}
+.compare-strip{margin:1.5rem;background:var(--w);border-radius:var(--r);box-shadow:var(--shadow);overflow:hidden;border:1.5px solid var(--div);}
+.cs-header{display:grid;grid-template-columns:1fr 1fr;background:var(--bg2);}
+.cs-col-hdr{padding:10px 14px;font-size:0.62rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--gt);}
+.cs-col-hdr.gps{color:var(--g);background:var(--gbg);}
+.cs-row{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid var(--div);}
+.cs-cell{padding:10px 14px;font-size:0.78rem;}
+.cs-cell.bad{color:var(--red);font-weight:600;}
+.cs-cell.good{color:var(--g);font-weight:600;}
+.cs-cell.lbl{font-size:0.62rem;color:var(--gt);text-transform:uppercase;letter-spacing:0.05em;background:var(--bg2);font-weight:600;}
+
+/* ════ PAGE: HOW GPS WORKS ════ */
+.how-page{padding:1.5rem;}
+.info-card{background:var(--w);border-radius:var(--r);box-shadow:var(--shadow);padding:1.25rem;border:1.5px solid var(--div);margin-bottom:1rem;}
+.info-card.green-border{border-color:var(--g);border-width:2px;}
+.info-tag{display:inline-block;font-size:0.58rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:3px 9px;border-radius:20px;margin-bottom:8px;}
+.tag-trad{background:var(--bg2);color:var(--gt);}
+.tag-gps{background:var(--gbg);color:var(--gtx);}
+.tag-proxy{background:#fff8e8;color:#7a5a10;}
+.info-title{font-family:'Playfair Display',serif;font-size:1.05rem;font-weight:700;margin-bottom:8px;}
+.info-txt{font-size:0.78rem;color:#444;line-height:1.7;}
+.stride-vis{background:var(--w);border-radius:var(--r);box-shadow:var(--shadow);padding:1.25rem;margin-bottom:1rem;border:1.5px solid var(--div);}
+.stride-bars{display:flex;flex-direction:column;gap:10px;margin-top:12px;}
+.sbar-row{display:flex;align-items:center;gap:10px;}
+.sbar-lbl{font-size:0.68rem;font-weight:600;width:70px;flex-shrink:0;}
+.sbar-track{flex:1;height:22px;background:var(--bg2);border-radius:4px;overflow:hidden;position:relative;}
+.sbar-fill{height:100%;border-radius:4px;display:flex;align-items:center;justify-content:flex-end;padding-right:8px;font-size:0.62rem;font-weight:700;color:var(--w);transition:width 1s cubic-bezier(0.34,1.2,0.64,1);}
+.sbar-fill.win{background:var(--g);}
+.sbar-fill.mid{background:#c9a84c;}
+.sbar-fill.lose{background:var(--red);}
+.sbar-val{font-size:0.68rem;font-weight:700;width:42px;flex-shrink:0;text-align:right;}
+
+/* ════ PAGE: LEADERBOARD ════ */
+.lb-page{padding:1.5rem;}
+.lb-card{background:var(--w);border-radius:var(--r);box-shadow:var(--shadow);overflow:hidden;border:1.5px solid var(--div);}
+.lb-row{display:flex;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid var(--div);transition:background 0.2s;}
+.lb-row:hover{background:var(--bg);}
+.lb-row:last-child{border-bottom:none;}
+.lb-rank{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;width:28px;text-align:center;flex-shrink:0;}
+.lb-rank.top{color:var(--gold);}
+.lb-avatar{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:700;flex-shrink:0;}
+.lb-info{flex:1;}
+.lb-user{font-size:0.82rem;font-weight:600;}
+.lb-sub{font-size:0.65rem;color:var(--gt);margin-top:1px;}
+.lb-pts{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--g);}
+.lb-pts-lbl{font-size:0.58rem;color:var(--gtt);text-transform:uppercase;letter-spacing:0.05em;}
+.lb-you{background:var(--gbg);border-color:var(--gbr);}
+.your-pick-strip{background:var(--g);border-radius:var(--r);padding:14px 16px;margin-bottom:1rem;display:flex;align-items:center;justify-content:space-between;position:relative;overflow:hidden;}
+.ypstrip-ht{position:absolute;inset:0;opacity:0.1;background-image:repeating-conic-gradient(var(--gl) 0% 25%,transparent 0% 50%);background-size:14px 14px;}
+.yp-lbl{font-size:0.62rem;color:#8aad99;letter-spacing:0.1em;text-transform:uppercase;z-index:1;position:relative;}
+.yp-val{font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:700;color:var(--gold-l);z-index:1;position:relative;}
+.yp-btn{background:var(--gold);color:var(--g);border:none;border-radius:8px;font-size:0.72rem;font-weight:700;padding:8px 16px;cursor:pointer;font-family:'DM Sans',sans-serif;z-index:1;position:relative;letter-spacing:0.05em;text-transform:uppercase;}
+
+/* ════ PAGE: ABOUT ════ */
+.about-page{padding:1.5rem;}
+.about-hero{background:var(--g);border-radius:var(--r-lg);padding:2rem;margin-bottom:1.5rem;position:relative;overflow:hidden;}
+.about-ht{position:absolute;inset:0;opacity:0.08;background-image:repeating-conic-gradient(var(--gl) 0% 25%,transparent 0% 50%);background-size:20px 20px;}
+.about-title{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:700;color:var(--gold-l);position:relative;z-index:1;margin-bottom:8px;}
+.about-sub{font-size:0.8rem;color:#8aad99;line-height:1.7;position:relative;z-index:1;}
+.limitation-card{background:var(--redbg);border:1.5px solid var(--redbr);border-radius:var(--r);padding:1.25rem;margin-bottom:1rem;}
+.lim-title{font-family:'Playfair Display',serif;font-size:0.95rem;font-weight:700;color:var(--red);margin-bottom:8px;}
+.lim-item{display:flex;gap:8px;margin-bottom:6px;font-size:0.78rem;color:#444;line-height:1.6;}
+
+/* ════ TOAST ════ */
+.toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--g);color:var(--gold-l);padding:10px 22px;border-radius:50px;font-size:0.78rem;font-weight:600;border:1px solid var(--gold);opacity:0;transition:all 0.3s;z-index:1000;white-space:nowrap;}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+/* ════ UTILS ════ */
+.px15{padding:0 1.5rem;}
+@media(min-width:768px){.bottom-nav{display:none;} .nav-btn{display:flex;}}
+@media(max-width:767px){.nav-btn:not(.gold):not(.live-badge){display:none;} .cards-scroll{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+
+<!-- ════════════════════════════════════ -->
+<!-- SPLASH SCREEN                        -->
+<!-- ════════════════════════════════════ -->
+<div class="screen active" id="splash" onclick="goTo('home')">
+  <div class="splash-ht"></div>
+  <div class="splash-inner">
+    <div class="splash-logo-ring">
+      <svg width="52" height="52" viewBox="0 0 52 52" fill="none">
+        <path d="M14 42 Q14 30 20 24 Q16 19 17 10 Q23 8 27 12 Q31 10 33 14 Q37 12 37 18 Q41 22 37 28 Q39 34 37 42" stroke="#1a3d2b" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="21" cy="15" r="2" fill="#1a3d2b"/>
+      </svg>
+    </div>
+    <div class="splash-title">Race IQ™</div>
+    <div class="splash-sub">Equibase · GPS Intelligence</div>
+    <div class="splash-divider"></div>
+    <div class="splash-tagline">GPS sees what finish positions cannot — the biomechanics underneath the result.</div>
+    <button class="splash-cta" onclick="event.stopPropagation();goTo('home')">Enter Race IQ</button>
+  </div>
+  <div class="splash-equibase">EQUIBASE</div>
+</div>
+
+<!-- ════════════════════════════════════ -->
+<!-- HOME / CARDS SCREEN                 -->
+<!-- ════════════════════════════════════ -->
+<div class="screen" id="home">
+  <nav class="nav">
+    <div class="nav-logo" onclick="goTo('splash')">
+      <div class="nav-logo-icon">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M5 16 Q5 11 8 9 Q6 7 7 4 Q9 3 11 5 Q13 4 13 6 Q15 7 13 10 Q14 13 13 16" stroke="#1a3d2b" stroke-width="1.8" fill="none" stroke-linecap="round"/><circle cx="8" cy="6" r="0.9" fill="#1a3d2b"/></svg>
+      </div>
+      <div class="nav-brand">Race IQ™</div>
+    </div>
+    <div class="nav-right">
+      <div class="live-badge"><div class="live-dot"></div><span class="live-txt">Live</span></div>
+      <button class="nav-btn active" onclick="goTo('home')">Cards</button>
+      <button class="nav-btn" onclick="goTo('lonesome')">Case Study</button>
+      <button class="nav-btn" onclick="goTo('howgps')">How GPS</button>
+      <button class="nav-btn" onclick="goTo('leaderboard')">Board</button>
+    </div>
+  </nav>
+
+  <div class="main">
+    <!-- Hero -->
+    <div class="hero">
+      <div class="hero-ht"></div>
+      <div class="hero-inner">
+        <div class="hero-left">
+          <div class="hero-eyebrow">Next Race — Laurel Park</div>
+          <div class="hero-title">Race 7 · 8F Dirt</div>
+          <div class="hero-meta">Jan 23, 2026 · Claiming $25,000 · 8 Horses · 6 GPS Equipped</div>
+        </div>
+        <div class="hero-stats">
+          <div class="countdown-box">
+            <div class="cd-val" id="cd">--:--</div>
+            <div class="cd-lbl">To Post</div>
+          </div>
+          <div class="hero-stat"><div class="hstat-val" style="color:#7fdf9a;">45%</div><div class="hstat-lbl">Top Pick</div></div>
+          <div class="hero-stat"><div class="hstat-val">6</div><div class="hstat-lbl">GPS</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Cards -->
+    <div class="section-hdr">
+      <span class="section-hdr-title">🏇 GPS Horse Cards</span>
+      <div class="section-hdr-line"></div>
+      <span style="font-size:0.65rem;color:var(--gt);white-space:nowrap;margin-left:10px;">Tap card for full report</span>
+    </div>
+
+    <div class="cards-scroll">
+
+      <!-- LUNA MOTH -->
+      <div class="hcard top-pick" onclick="openDetail('luna')">
+        <div class="top-pick-badge">⭐ Top GPS Pick</div>
+        <div class="ctop"><div class="ctop-ht"></div><div class="post-num">4</div><div class="mode-pill gps-mode">🛰 GPS</div><div class="card-odds">9/5</div></div>
+        <div class="cphoto"><svg class="cam-svg" width="44" height="44" viewBox="0 0 44 44" fill="none"><rect x="5" y="13" width="34" height="24" rx="5" stroke="#999" stroke-width="2" fill="none"/><circle cx="22" cy="25" r="7" stroke="#999" stroke-width="2" fill="none"/><circle cx="22" cy="25" r="3.5" fill="#ccc"/><path d="M16 13 L18 9 L26 9 L28 13" stroke="#999" stroke-width="1.8" fill="none" stroke-linejoin="round"/></svg><div class="photo-lbl">Horse Photo</div></div>
+        <div class="cname-band"><div class="cname">Luna Moth</div><div class="carch">⚡ The Late Closer</div></div>
+        <div class="cstats">
+          <div class="srow"><div class="slbl">Early Speed</div><div class="sval">15.4 m/s</div><div class="stars"><span class="star on"></span><span class="star on"></span><span class="star on"></span><span class="star off"></span></div></div>
+          <div class="srow"><div class="slbl">Late Speed</div><div class="sval">16.5 m/s</div><div class="stars"><span class="star on"></span><span class="star on"></span><span class="star on"></span><span class="star on"></span></div></div>
+          <div class="srow"><div class="slbl">Stride Eff.</div><div class="sval">14.2</div><div class="stars"><span class="star on"></span><span class="star on"></span><span class="star on"></span><span class="star on"></span></div></div>
+          <div class="srow"><div class="slbl">Extra Dist.</div><div class="sval">100.6m</div><div class="stars"><span class="star on"></span><span class="star on"></span><span class="star on"></span><span class="star off"></span></div></div>
+          <div class="srow hl-row"><div class="slbl">Speed Chg.</div><div class="sval">+1.1 m/s</div><div class="stars"><span class="star on"></span><span class="star on"></span><span class="star on"></span><span class="star on"></span></div><span class="top10">Top 10%</span></div>
+        </div>
+        <div class="craces"><div class="sec-lbl">Past 3 Races</div>
+          <div class="rrow"><span class="rinfo">Jan 23 · Laurel · 8F</span><span class="rdelta dp-pos">+1.1 m/s</span><div class="fdot f1">1</div></div>
+          <div class="rrow"><span class="rinfo">Dec 26 · Laurel · 8F</span><span class="rdelta dp-pos">+0.4 m/s</span><div class="fdot f2">2</div></div>
+          <div class="rrow"><span class="rinfo">Sep 12 · Colonial</span><span class="rdelta dp-neg">-0.2 m/s</span><div class="fdot fbad">7</div></div>
+        </div>
+        <div class="cprob"><div><div class="prob-sl">Win Probability</div><div class="prob-n">45%</div></div><div style="text-align:right"><div class="prob-sl">Morning Line</div><div class="ml-v">9/5 = 35%</div><div class="edge">+10% Edge</div></div></div>
+        <div class="csummary"><div class="sec-lbl">GPS Insight</div><div class="sum-txt">Late speed <strong>#1 in field</strong> at 16.5 m/s. Only 10% of horses accelerate at the finish — she's one of them. Elite stride efficiency held through final gates.</div></div>
+        <div class="cfoot"><div class="cfoot-ht"></div>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" style="opacity:0.6;z-index:1"><path d="M6 20 Q6 14 9 11 Q7 9 8 5 Q10 4 12 6 Q14 5 15 7 Q17 6 17 9 Q19 11 17 14 Q18 17 17 20" stroke="#f5e6c8" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg>
+          <div class="foot-logo">EQUIBASE</div>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" style="opacity:0.6;z-index:1"><path d="M6 20 Q6 14 9 11 Q7 9 8 5 Q10 4 12 6 Q14 5 15 7 Q17 6 17 9 Q19 11 17 14 Q18 17 17 20" stroke="#f5e6c8" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg>
+        </div>
+      </div>
+
+      <!-- FLOGE -->
+      <div class="hcard" onclick="openDetail('floge')">
+        <div class="ctop"><div class="ctop-ht"></div><div class="post-num">3</div><div class="mode-pill gps-mode">🛰 GPS</div><div class="card-odds">7/2</div></div>
+        <div class="cphoto"><svg class="cam-svg" width="44" height="44" viewBox="0 0 44 44" fill="none"><rect x="5" y="13" width="34" height="24" rx="5" stroke="#999" stroke-width="2" fill="none"/><circle cx="22" cy="25" r="7" stroke="#999" stroke-width="2" fill="none"/><circle cx="22" cy="25" r="3.5" fill="#ccc"/><path d="M16 13 L18 9 L26 9 L28 13" stroke="#999" stroke-width="1.8" fill="none" stroke-linejoin="round"/></svg><div class="photo-lbl">Horse Photo</div></div>
+        <div class="cname-band"><div class="cname">Floge</div><div class="carch">🔥 The Proven Closer</div></div>
+        <div class="cstats">
+          <div class="srow"><div class="slbl">Early Speed</div><div class="sval">16.2 m/s</div><div class="stars"><span class="star on"></span><span class="star on"></span><span class="star on"></span><span class="star on"></span></div></div>
+          <div class="srow"><div class="slbl">Late Speed</div><div class="sval">16.8 m/s</div><div class="stars"><span class="star on"></span><span class="star on"></span><span class="star on"></span><span class="star on"></span></div></div>
+          <div class="srow"><div class="slbl">Stride Eff.</div><div class="sval">14.8</div><div class="stars"><span class="star on"></span><span class="star on"></span><span class="star on"></span><span class="star off"></span></div></div>
+          <div class="srow"><div class="slbl">Extra Dist.</div><div class="sval">101.2m</div><div class="stars"><span class="star on"></span><span class="star on"></span><span class="star on"></span><span class="star off"></span></div></div>
+          <div class="srow hl-row"><div class="slbl">Speed Chg.</div><div class="sval">+0.6 m/s</div><div class="stars"><span class="star on"></span><span class="star on"></span><span class="star on"></span><span class="star off"></span></div></div>
+        </div>
+        <div class="craces"><div class="sec-lbl">Past 3 Races</div>
+          <div class="rrow"><span class="rinfo">Jan 1 · Aqueduct · 8F</span><span class="rdelta dp-pos">+0.6 m/s</span><div class="fdot f1">1</div></div>
+          <div class="rrow"><span class="rinfo">Dec 10 · Aqueduct · 8F</span><span class="rdelta dp-pos">+0.3 m/s</span><div class="fdot f2">2</div></div>
+          <div class="rrow"><span class="rinfo">Nov 15 · Belmont · 7F</span><span class="rdelta dp-neg">-0.1 m/s</span><div class="fdot f3">3</div></div>
+        </div>
+        <div class="cprob"><div><div class="prob-sl">Win Probability</div><div class="prob-n">28%</div></div><div style="text-align:right"><div class="prob-sl">Morning Line</div><div class="ml-v">7/2 = 22%</div><div class="edge">+6% Edge</div></div></div>
+        <div class="csummary"><div class="sec-lbl">GPS Insight</div><div class="sum-txt">Only proven <strong>winner at this distance</strong> in field. Post 3 ideal for tactical positioning. Best exacta partner with Luna Moth.</div></div>
+        <div class="cfoot"><div class="cfoot-ht"></div><svg width="24" height="24" viewBox="0 0 24 24" fill="none" style="opacity:0.6;z-index:1"><path d="M6 20 Q6 14 9 11 Q7 9 8 5 Q10 4 12 6 Q14 5 15 7 Q17 6 17 9 Q19 11 17 14 Q18 17 17 20" stroke="#f5e6c8" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg><div class="foot-logo">EQUIBASE</div><svg width="24" height="24" viewBox="0 0 24 24" fill="none" style="opacity:0.6;z-index:1"><path d="M6 20 Q6 14 9 11 Q7 9 8 5 Q10 4 12 6 Q14 5 15 7 Q17 6 17 9 Q19 11 17 14 Q18 17 17 20" stroke="#f5e6c8" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg></div>
+      </div>
+
+      <!-- FOXY CARA (PROXY) -->
+      <div class="hcard" onclick="openDetail('foxy')">
+        <div class="ctop"><div class="ctop-ht"></div><div class="post-num">5</div><div class="mode-pill proxy-mode">📊 Proxy</div><div class="card-odds">4/1</div></div>
+        <div class="cphoto"><svg class="cam-svg" width="44" height="44" viewBox="0 0 44 44" fill="none"><rect x="5" y="13" width="34" height="24" rx="5" stroke="#999" stroke-width="2" fill="none"/><circle cx="22" cy="25" r="7" stroke="#999" stroke-width="2" fill="none"/><circle cx="22" cy="25" r="3.5" fill="#ccc"/><path d="M16 13 L18 9 L26 9 L28 13" stroke="#999" stroke-width="1.8" fill="none" stroke-linejoin="round"/></svg><div class="photo-lbl">Horse Photo</div></div>
+        <div class="cname-band"><div class="cname">Foxy Cara</div><div class="carch">🎯 The Rail Hunter</div></div>
+        <div class="cstats">
+          <div class="srow"><div class="slbl">Early Pos.</div><div class="sval">3rd @ ¼</div><div class="stars"><span class="star on"></span><span class="star on"></span><span class="star on"></span><span class="star off"></span></div></div>
+          <div class="srow"><div class="slbl">Late Pos.</div><div class="sval">2nd @ str.</div><div class="stars"><span class="star on"></span><span class="star on"></span><span class="star on"></span><span class="star on"></span></div></div>
+          <div class="srow"><div class="slbl">Late Pace Fig.</div><div class="sval">91</div><div class="stars"><span class="star on"></span><span class="star on"></span><span class="star on"></span><span class="star off"></span></div></div>
+          <div class="srow"><div class="slbl">Extra Dist.</div><div class="sval">100.9m</div><div class="stars"><span class="star on"></span><span class="star on"></span><span class="star on"></span><span class="star off"></span></div></div>
+          <div class="srow hl-row"><div class="slbl">Pos. Gain</div><div class="sval">+2 spots</div><div class="stars"><span class="star on"></span><span class="star on"></span><span class="star on"></span><span class="star on"></span></div></div>
+        </div>
+        <div class="craces"><div class="sec-lbl">Past 3 Races</div>
+          <div class="rrow"><span class="rinfo">Jan 1 · Aqueduct · 8F</span><span class="rdelta dp-pos">+2 pos.</span><div class="fdot f3">3</div></div>
+          <div class="rrow"><span class="rinfo">Dec 5 · Aqueduct · 7F</span><span class="rdelta dp-pos">+1 pos.</span><div class="fdot f2">2</div></div>
+          <div class="rrow"><span class="rinfo">Nov 8 · Belmont · 8F</span><span class="rdelta dp-neg">-1 pos.</span><div class="fdot f3">4</div></div>
+        </div>
+        <div class="cprob"><div><div class="prob-sl">Win Probability</div><div class="prob-n">22%</div></div><div style="text-align:right"><div class="prob-sl">Morning Line</div><div class="ml-v">4/1 = 20%</div><div class="edge">+2% Edge</div></div></div>
+        <div class="csummary"><div class="sec-lbl">Proxy Insight</div><div class="sum-txt">No GPS — estimated from pace figures. <strong>Consistent position gains late</strong> signal a closer. Rail-efficient path. Strong trifecta candidate.</div></div>
+        <div class="cfoot"><div class="cfoot-ht"></div><svg width="24" height="24" viewBox="0 0 24 24" fill="none" style="opacity:0.6;z-index:1"><path d="M6 20 Q6 14 9 11 Q7 9 8 5 Q10 4 12 6 Q14 5 15 7 Q17 6 17 9 Q19 11 17 14 Q18 17 17 20" stroke="#f5e6c8" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg><div class="foot-logo">EQUIBASE</div><svg width="24" height="24" viewBox="0 0 24 24" fill="none" style="opacity:0.6;z-index:1"><path d="M6 20 Q6 14 9 11 Q7 9 8 5 Q10 4 12 6 Q14 5 15 7 Q17 6 17 9 Q19 11 17 14 Q18 17 17 20" stroke="#f5e6c8" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg></div>
+      </div>
+
+    </div><!-- /cards-scroll -->
+  </div><!-- /main -->
+
+  <nav class="bottom-nav">
+    <button class="bnav-item active" onclick="goTo('home')"><div class="bnav-icon">🃏</div><div class="bnav-lbl">Cards</div></button>
+    <button class="bnav-item" onclick="goTo('lonesome')"><div class="bnav-icon">🔍</div><div class="bnav-lbl">Case</div></button>
+    <button class="bnav-item" onclick="goTo('howgps')"><div class="bnav-icon">🛰</div><div class="bnav-lbl">GPS</div></button>
+    <button class="bnav-item" onclick="goTo('leaderboard')"><div class="bnav-icon">🏆</div><div class="bnav-lbl">Board</div></button>
+    <button class="bnav-item" onclick="goTo('about')"><div class="bnav-icon">ℹ️</div><div class="bnav-lbl">About</div></button>
+  </nav>
+</div>
+
+<!-- ════════════════════════════════════ -->
+<!-- LONESOME ROAD CASE STUDY            -->
+<!-- ════════════════════════════════════ -->
+<div class="screen" id="lonesome">
+  <nav class="nav">
+    <div class="nav-logo" onclick="goTo('home')">
+      <div class="nav-logo-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M5 16 Q5 11 8 9 Q6 7 7 4 Q9 3 11 5 Q13 4 13 6 Q15 7 13 10 Q14 13 13 16" stroke="#1a3d2b" stroke-width="1.8" fill="none" stroke-linecap="round"/><circle cx="8" cy="6" r="0.9" fill="#1a3d2b"/></svg></div>
+      <div class="nav-brand">Race IQ™</div>
+    </div>
+    <div class="nav-right">
+      <button class="nav-btn" onclick="goTo('home')">← Cards</button>
+    </div>
+  </nav>
+  <div class="main">
+    <div class="lr-hero">
+      <div class="lr-ht"></div>
+      <div class="lr-inner">
+        <div class="lr-eyebrow">Retroactive Case Study — Dec 26, 2024 · Laurel Park</div>
+        <div class="lr-title">Lonesome Road<br/>was a 12/1 shot.<br/>GPS said <em>winner.</em></div>
+        <div class="lr-sub">Traditional stats showed a wildly inconsistent horse — finishes of 7, 2, 7, 2. The odds board agreed: 12/1 longshot. But GPS data told a completely different story. His speed change of +1.1 m/s placed him in the top 10% of all horses tracked at Laurel Park. Race IQ would have flagged him as a +30% edge before a single dollar was wagered.</div>
+        <div class="lr-stats-row">
+          <div class="lr-stat"><div class="lr-stat-val">12/1</div><div class="lr-stat-lbl">Morning line odds</div></div>
+          <div class="lr-stat hl"><div class="lr-stat-val">+1.1</div><div class="lr-stat-lbl">Speed change m/s</div></div>
+          <div class="lr-stat hl"><div class="lr-stat-val">+30%</div><div class="lr-stat-lbl">GPS Edge</div></div>
+          <div class="lr-stat"><div class="lr-stat-val">Top 10%</div><div class="lr-stat-lbl">Accelerators</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="compare-strip">
+      <div class="cs-header">
+        <div class="cs-col-hdr">Traditional View</div>
+        <div class="cs-col-hdr gps">GPS View</div>
+      </div>
+      <div class="cs-row"><div class="cs-cell lbl" style="grid-column:1/-1;background:var(--bg2);">Past record</div></div>
+      <div class="cs-row"><div class="cs-cell bad">7, 2, 7, 2 — wildly inconsistent</div><div class="cs-cell good">Speed change positive every race</div></div>
+      <div class="cs-row"><div class="cs-cell lbl" style="grid-column:1/-1;">Odds implied probability</div></div>
+      <div class="cs-row"><div class="cs-cell bad">7.7% (12/1)</div><div class="cs-cell good">38% win probability</div></div>
+      <div class="cs-row"><div class="cs-cell lbl" style="grid-column:1/-1;">Late race ability</div></div>
+      <div class="cs-row"><div class="cs-cell bad">Invisible in finish positions</div><div class="cs-cell good">16.5 m/s — #1 in field</div></div>
+      <div class="cs-row"><div class="cs-cell lbl" style="grid-column:1/-1;">Stride at the finish</div></div>
+      <div class="cs-row"><div class="cs-cell bad">Not available</div><div class="cs-cell good">14.2 — held efficiency</div></div>
+    </div>
+
+    <div class="section-hdr"><span class="section-hdr-title">What Race IQ Would Have Shown</span><div class="section-hdr-line"></div></div>
+    <div style="padding:0 1.5rem 1.5rem;">
+      <div class="hcard" onclick="openDetail('lonesome')">
+        <div class="ctop"><div class="ctop-ht"></div><div class="post-num">5</div><div class="mode-pill gps-mode">🛰 GPS</div><div class="card-odds">12/1</div></div>
+        <div class="cphoto"><svg class="cam-svg" width="44" height="44" viewBox="0 0 44 44" fill="none"><rect x="5" y="13" width="34" height="24" rx="5" stroke="#999" stroke-width="2" fill="none"/><circle cx="22" cy="25" r="7" stroke="#999" stroke-width="2" fill="none"/><circle cx="22" cy="25" r="3.5" fill="#ccc"/><path d="M16 13 L18 9 L26 9 L28 13" stroke="#999" stroke-width="1.8" fill="none" stroke-linejoin="round"/></svg><div class="photo-lbl">Horse Photo</div></div>
+        <div class="cname-band"><div class="cname">Lonesome Road</div><div class="carch">🔥 The Hidden Closer</div></div>
+        <div class="cstats">
+          <div class="srow"><div class="slbl">Early Speed</div><div class="sval">15.4 m/s</div><div class="stars"><span class="star on"></span><span class="star on"></span><span class="star on"></span><span class="star off"></span></div></div>
+          <div class="srow"><div class="slbl">Late Speed</div><div class="sval">16.5 m/s</div><div class="stars"><span class="star on"></span><span class="star on"></span><span class="star on"></span><span class="star on"></span></div></div>
+          <div class="srow"><div class="slbl">Stride Eff.</div><div class="sval">14.2</div><div class="stars"><span class="star on"></span><span class="star on"></span><span class="star on"></span><span class="star on"></span></div></div>
+          <div class="srow"><div class="slbl">Extra Dist.</div><div class="sval">100.6m</div><div class="stars"><span class="star on"></span><span class="star on"></span><span class="star on"></span><span class="star off"></span></div></div>
+          <div class="srow hl-row"><div class="slbl">Speed Chg.</div><div class="sval">+1.1 m/s</div><div class="stars"><span class="star on"></span><span class="star on"></span><span class="star on"></span><span class="star on"></span></div><span class="top10">Top 10%</span></div>
+        </div>
+        <div class="craces"><div class="sec-lbl">Past 3 Races</div>
+          <div class="rrow"><span class="rinfo">Sep 12 · Colonial · 8F</span><span class="rdelta dp-pos">+0.4 m/s</span><div class="fdot f2">2</div></div>
+          <div class="rrow"><span class="rinfo">Jul 16 · Colonial · 8F</span><span class="rdelta dp-neg">-0.2 m/s</span><div class="fdot fbad">7</div></div>
+          <div class="rrow"><span class="rinfo">May 4 · Pimlico · 8F</span><span class="rdelta dp-pos">+0.3 m/s</span><div class="fdot f2">2</div></div>
+        </div>
+        <div class="cprob"><div><div class="prob-sl">Win Probability</div><div class="prob-n">38%</div></div><div style="text-align:right"><div class="prob-sl">Morning Line</div><div class="ml-v">12/1 = 7.7%</div><div class="edge">+30% Edge 🔥</div></div></div>
+        <div class="csummary"><div class="sec-lbl">GPS Insight</div><div class="sum-txt">Odds say longshot — GPS says contender. <strong>+1.1 m/s speed change is Top 10%</strong> of all finishers. Only horse in field accelerating through fatigue. The 7th place finish hid a winner.</div></div>
+        <div class="cfoot"><div class="cfoot-ht"></div><svg width="24" height="24" viewBox="0 0 24 24" fill="none" style="opacity:0.6;z-index:1"><path d="M6 20 Q6 14 9 11 Q7 9 8 5 Q10 4 12 6 Q14 5 15 7 Q17 6 17 9 Q19 11 17 14 Q18 17 17 20" stroke="#f5e6c8" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg><div class="foot-logo">EQUIBASE</div><svg width="24" height="24" viewBox="0 0 24 24" fill="none" style="opacity:0.6;z-index:1"><path d="M6 20 Q6 14 9 11 Q7 9 8 5 Q10 4 12 6 Q14 5 15 7 Q17 6 17 9 Q19 11 17 14 Q18 17 17 20" stroke="#f5e6c8" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg></div>
+      </div>
+    </div>
+  </div>
+  <nav class="bottom-nav">
+    <button class="bnav-item" onclick="goTo('home')"><div class="bnav-icon">🃏</div><div class="bnav-lbl">Cards</div></button>
+    <button class="bnav-item active" onclick="goTo('lonesome')"><div class="bnav-icon">🔍</div><div class="bnav-lbl">Case</div></button>
+    <button class="bnav-item" onclick="goTo('howgps')"><div class="bnav-icon">🛰</div><div class="bnav-lbl">GPS</div></button>
+    <button class="bnav-item" onclick="goTo('leaderboard')"><div class="bnav-icon">🏆</div><div class="bnav-lbl">Board</div></button>
+    <button class="bnav-item" onclick="goTo('about')"><div class="bnav-icon">ℹ️</div><div class="bnav-lbl">About</div></button>
+  </nav>
+</div>
+
+<!-- ════════════════════════════════════ -->
+<!-- HOW GPS WORKS                        -->
+<!-- ════════════════════════════════════ -->
+<div class="screen" id="howgps">
+  <nav class="nav">
+    <div class="nav-logo" onclick="goTo('home')"><div class="nav-logo-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M5 16 Q5 11 8 9 Q6 7 7 4 Q9 3 11 5 Q13 4 13 6 Q15 7 13 10 Q14 13 13 16" stroke="#1a3d2b" stroke-width="1.8" fill="none" stroke-linecap="round"/><circle cx="8" cy="6" r="0.9" fill="#1a3d2b"/></svg></div><div class="nav-brand">Race IQ™</div></div>
+    <div class="nav-right"><button class="nav-btn" onclick="goTo('home')">← Cards</button></div>
+  </nav>
+  <div class="main how-page">
+    <div class="info-card"><span class="info-tag tag-trad">Traditional Data</span><div class="info-title">Snapshots Only</div><div class="info-txt">Post position · Finish order · Lengths behind at 5 checkpoints · Surface · Distance · Purse. They only tell you <em>where</em> a horse was — not how it got there. Did it move from 4th to 1st in a burst or a slow grind? Did it waste ground? Where did it fatigue?</div></div>
+    <div class="info-card green-border"><span class="info-tag tag-gps">GPS Data</span><div class="info-title">The Full Picture</div><div class="info-txt">Sectional time · Running time · Speed every 50m · Distance ran (path efficiency) · <strong>Stride count per gate</strong> · Time & distance behind the leader · Speed change finish vs. start. GPS fills every gap between those 5 checkpoints.</div></div>
+    <div class="info-card"><span class="info-tag tag-proxy">Proxy Mode</span><div class="info-title">No GPS? Estimated Metrics</div><div class="info-txt">At non-GPS tracks: Early/Late <strong>Position</strong> replaces Speed · Late Pace Figure replaces Stride Efficiency · Extra Distance estimated from post position + track bias data. Same card, slightly wider confidence band. Cards show 📊 Proxy badge.</div></div>
+
+    <div class="stride-vis">
+      <div class="info-title">Why Stride Efficiency Matters</div>
+      <div class="info-txt" style="margin-bottom:4px;">Winners hold their stride at the finish. Losing horses take more steps as they tire — same distance, less power per stride. That's fatigue made visible.</div>
+      <div class="stride-bars" id="stride-bars">
+        <div class="sbar-row"><div class="sbar-lbl" style="color:var(--g);">1st Place</div><div class="sbar-track"><div class="sbar-fill win" style="width:0%" data-w="68%">15.0</div></div><div class="sbar-val" style="color:var(--g);">15.0</div></div>
+        <div class="sbar-row"><div class="sbar-lbl" style="color:var(--gold);">5th Place</div><div class="sbar-track"><div class="sbar-fill mid" style="width:0%" data-w="80%">15.5</div></div><div class="sbar-val" style="color:var(--gold);">15.5</div></div>
+        <div class="sbar-row"><div class="sbar-lbl" style="color:var(--red);">11th Place</div><div class="sbar-track"><div class="sbar-fill lose" style="width:0%" data-w="96%">16.8</div></div><div class="sbar-val" style="color:var(--red);">16.8</div></div>
+      </div>
+      <div style="font-size:0.65rem;color:var(--gt);margin-top:8px;">Average strides in final gate · Laurel Park 2023–24 season</div>
+    </div>
+  </div>
+  <nav class="bottom-nav">
+    <button class="bnav-item" onclick="goTo('home')"><div class="bnav-icon">🃏</div><div class="bnav-lbl">Cards</div></button>
+    <button class="bnav-item" onclick="goTo('lonesome')"><div class="bnav-icon">🔍</div><div class="bnav-lbl">Case</div></button>
+    <button class="bnav-item active" onclick="goTo('howgps')"><div class="bnav-icon">🛰</div><div class="bnav-lbl">GPS</div></button>
+    <button class="bnav-item" onclick="goTo('leaderboard')"><div class="bnav-icon">🏆</div><div class="bnav-lbl">Board</div></button>
+    <button class="bnav-item" onclick="goTo('about')"><div class="bnav-icon">ℹ️</div><div class="bnav-lbl">About</div></button>
+  </nav>
+</div>
+
+<!-- ════════════════════════════════════ -->
+<!-- LEADERBOARD                          -->
+<!-- ════════════════════════════════════ -->
+<div class="screen" id="leaderboard">
+  <nav class="nav">
+    <div class="nav-logo" onclick="goTo('home')"><div class="nav-logo-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M5 16 Q5 11 8 9 Q6 7 7 4 Q9 3 11 5 Q13 4 13 6 Q15 7 13 10 Q14 13 13 16" stroke="#1a3d2b" stroke-width="1.8" fill="none" stroke-linecap="round"/><circle cx="8" cy="6" r="0.9" fill="#1a3d2b"/></svg></div><div class="nav-brand">Race IQ™</div></div>
+    <div class="nav-right"><button class="nav-btn gold" onclick="showToast('Pick submitted! +25 pts pending 🎉')">Make My Pick</button></div>
+  </nav>
+  <div class="main lb-page">
+    <div class="your-pick-strip">
+      <div class="ypstrip-ht"></div>
+      <div style="z-index:1;position:relative;"><div class="yp-lbl">Your Current Pick</div><div class="yp-val">Luna Moth — Race 7</div></div>
+      <button class="yp-btn" onclick="showToast('Locked in! Good luck 🏇')">Locked In ✓</button>
+    </div>
+
+    <div class="section-hdr"><span class="section-hdr-title">🏆 Race IQ Leaderboard</span><div class="section-hdr-line"></div><span style="font-size:0.62rem;color:var(--gt);white-space:nowrap;margin-left:10px;">5,284 players</span></div>
+
+    <div class="lb-card">
+      <div class="lb-row"><div class="lb-rank top">1</div><div class="lb-avatar" style="background:#fff8e8;color:#c9a84c;">SM</div><div class="lb-info"><div class="lb-user">Sarah_M</div><div class="lb-sub">12 correct picks · 94% GPS accuracy</div></div><div style="text-align:right"><div class="lb-pts">1,247</div><div class="lb-pts-lbl">pts</div></div></div>
+      <div class="lb-row"><div class="lb-rank top">2</div><div class="lb-avatar" style="background:#f0faf4;color:#1a5c38;">RK</div><div class="lb-info"><div class="lb-user">RaceKing88</div><div class="lb-sub">11 correct · 89% accuracy</div></div><div style="text-align:right"><div class="lb-pts">1,189</div><div class="lb-pts-lbl">pts</div></div></div>
+      <div class="lb-row"><div class="lb-rank top">3</div><div class="lb-avatar" style="background:#f0f4ff;color:#1a3d8b;">GG</div><div class="lb-info"><div class="lb-user">GPSGuru</div><div class="lb-sub">10 correct · 87% accuracy</div></div><div style="text-align:right"><div class="lb-pts">1,156</div><div class="lb-pts-lbl">pts</div></div></div>
+      <div class="lb-row"><div class="lb-rank">4</div><div class="lb-avatar" style="background:var(--bg2);color:var(--gt);">JD</div><div class="lb-info"><div class="lb-user">JockeyDave</div><div class="lb-sub">9 correct · 82% accuracy</div></div><div style="text-align:right"><div class="lb-pts">1,034</div><div class="lb-pts-lbl">pts</div></div></div>
+      <div class="lb-row"><div class="lb-rank">5</div><div class="lb-avatar" style="background:var(--bg2);color:var(--gt);">FP</div><div class="lb-info"><div class="lb-user">FastPasture</div><div class="lb-sub">9 correct · 80% accuracy</div></div><div style="text-align:right"><div class="lb-pts">998</div><div class="lb-pts-lbl">pts</div></div></div>
+      <div style="padding:8px 16px;text-align:center;font-size:0.68rem;color:var(--gt);">· · · 91 players · · ·</div>
+      <div class="lb-row lb-you"><div class="lb-rank" style="color:var(--g);">96</div><div class="lb-avatar" style="background:var(--gbg);color:var(--g);border:1.5px solid var(--gbr);">You</div><div class="lb-info"><div class="lb-user" style="color:var(--g);">You</div><div class="lb-sub">3 correct · ↑47 this week 🔥</div></div><div style="text-align:right"><div class="lb-pts" style="color:var(--gold);">135</div><div class="lb-pts-lbl">pts</div></div></div>
+    </div>
+  </div>
+  <nav class="bottom-nav">
+    <button class="bnav-item" onclick="goTo('home')"><div class="bnav-icon">🃏</div><div class="bnav-lbl">Cards</div></button>
+    <button class="bnav-item" onclick="goTo('lonesome')"><div class="bnav-icon">🔍</div><div class="bnav-lbl">Case</div></button>
+    <button class="bnav-item" onclick="goTo('howgps')"><div class="bnav-icon">🛰</div><div class="bnav-lbl">GPS</div></button>
+    <button class="bnav-item active" onclick="goTo('leaderboard')"><div class="bnav-icon">🏆</div><div class="bnav-lbl">Board</div></button>
+    <button class="bnav-item" onclick="goTo('about')"><div class="bnav-icon">ℹ️</div><div class="bnav-lbl">About</div></button>
+  </nav>
+</div>
+
+<!-- ════════════════════════════════════ -->
+<!-- ABOUT / LIMITATIONS                 -->
+<!-- ════════════════════════════════════ -->
+<div class="screen" id="about">
+  <nav class="nav">
+    <div class="nav-logo" onclick="goTo('home')"><div class="nav-logo-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M5 16 Q5 11 8 9 Q6 7 7 4 Q9 3 11 5 Q13 4 13 6 Q15 7 13 10 Q14 13 13 16" stroke="#1a3d2b" stroke-width="1.8" fill="none" stroke-linecap="round"/><circle cx="8" cy="6" r="0.9" fill="#1a3d2b"/></svg></div><div class="nav-brand">Race IQ™</div></div>
+    <div class="nav-right"><button class="nav-btn" onclick="goTo('home')">← Cards</button></div>
+  </nav>
+  <div class="main about-page">
+    <div class="about-hero">
+      <div class="about-ht"></div>
+      <div class="about-title">Race IQ™ — About This Tool</div>
+      <div class="about-sub">Race IQ uses Equibase GPS data to surface insights that finish positions cannot show. Win probabilities are weighted composites of late speed percentile (40%), stride efficiency percentile (35%), and position gain history (25%). Proxy mode estimates GPS metrics from traditional pace figures at non-GPS tracks.</div>
+    </div>
+
+    <div class="section-hdr"><span class="section-hdr-title">⚠️ Known Limitations</span><div class="section-hdr-line"></div></div>
+    <div class="limitation-card"><div class="lim-title">GPS Coverage is Partial</div>
+      <div class="lim-item"><span>→</span><span>Only select tracks have GPS equipment. Cards show 📊 Proxy badge when data is estimated — confidence intervals are wider.</span></div>
+    </div>
+    <div class="limitation-card"><div class="lim-title">Small Sample Sizes</div>
+      <div class="lim-item"><span>→</span><span>Horses with only 1–2 GPS races produce less reliable win probabilities. More GPS starts = more accurate predictions.</span></div>
+    </div>
+    <div class="limitation-card"><div class="lim-title">Track Conditions Not Modeled</div>
+      <div class="lim-item"><span>→</span><span>GPS stride data from a fast track doesn't transfer directly to a sloppy/muddy condition. Weather is not yet factored in.</span></div>
+    </div>
+    <div class="limitation-card"><div class="lim-title">Win % is a Model, Not a Guarantee</div>
+      <div class="lim-item"><span>→</span><span>45% win probability means the model gives a 45% chance — it does not mean the horse will win 45% of the time going forward.</span></div>
+    </div>
+  </div>
+  <nav class="bottom-nav">
+    <button class="bnav-item" onclick="goTo('home')"><div class="bnav-icon">🃏</div><div class="bnav-lbl">Cards</div></button>
+    <button class="bnav-item" onclick="goTo('lonesome')"><div class="bnav-icon">🔍</div><div class="bnav-lbl">Case</div></button>
+    <button class="bnav-item" onclick="goTo('howgps')"><div class="bnav-icon">🛰</div><div class="bnav-lbl">GPS</div></button>
+    <button class="bnav-item" onclick="goTo('leaderboard')"><div class="bnav-icon">🏆</div><div class="bnav-lbl">Board</div></button>
+    <button class="bnav-item active" onclick="goTo('about')"><div class="bnav-icon">ℹ️</div><div class="bnav-lbl">About</div></button>
+  </nav>
+</div>
+
+<!-- ════════════════════════════════════ -->
+<!-- DETAIL SLIDE-UP PANEL               -->
+<!-- ════════════════════════════════════ -->
+<div class="detail-overlay" id="detail-overlay" onclick="if(event.target===this)closeDetail()">
+  <div class="detail-panel">
+    <div class="dp-handle"></div>
+    <div class="dp-topbar">
+      <div class="dp-ht"></div>
+      <div class="dp-name" id="dp-name">Horse</div>
+      <div class="dp-arch" id="dp-arch">Archetype</div>
+      <button class="dp-close" onclick="closeDetail()">×</button>
+    </div>
+    <div class="dp-body" id="dp-body"></div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ── NAVIGATION ──
+const screens=['splash','home','lonesome','howgps','leaderboard','about'];
+function goTo(id){
+  screens.forEach(s=>document.getElementById(s).classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  if(id==='howgps') setTimeout(animateBars,300);
+  window.scrollTo(0,0);
+}
+
+// ── COUNTDOWN ──
+function updateCd(){
+  const now=new Date();
+  const post=new Date(now);
+  post.setHours(16,45,0,0);
+  if(post<now)post.setDate(post.getDate()+1);
+  const d=Math.floor((post-now)/1000);
+  const h=Math.floor(d/3600),m=Math.floor((d%3600)/60),s=d%60;
+  const el=document.getElementById('cd');
+  if(el)el.textContent=h>0?`${h}h ${m}m`:`${m}:${String(s).padStart(2,'0')}`;
+  setTimeout(updateCd,1000);
+}
+updateCd();
+
+// ── STRIDE BARS ANIMATION ──
+function animateBars(){
+  document.querySelectorAll('.sbar-fill').forEach(b=>{
+    b.style.width=b.dataset.w;
+  });
+}
+
+// ── DETAIL PANEL DATA ──
+const details={
+  luna:{
+    name:'Luna Moth',arch:'⚡ The Late Closer — GPS Mode',
+    grid:[{v:'45%',l:'Win Probability',gold:true},{v:'#1',l:'Late Speed Rank',gold:true},{v:'Top 10%',l:'Speed Change',gold:false},{v:'14.2',l:'Stride Efficiency',gold:false}],
+    text:`Luna Moth's GPS profile is the most complete in this field. Her late speed of <strong>16.5 m/s ranks first</strong> among all horses today, and her speed change of +1.1 m/s puts her in the top 10% of all horses tracked at Laurel Park in 2023–24.<br><br>Her stride efficiency of 14.2 means she is not wasting energy — she covers ground efficiently and saves reserves for the finish. Extra distance of 100.6m confirms a clean rail path.<br><br>Win probability is a weighted composite: late speed percentile (40%) + stride efficiency percentile (35%) + position gain history (25%) = <strong>45%</strong>. Morning line implies 35%, giving a meaningful +10% edge.`,
+    bet:'Luna Moth to Win',betsub:'Race 7 · Laurel Park · Jan 23'
+  },
+  floge:{
+    name:'Floge',arch:'🔥 The Proven Closer — GPS Mode',
+    grid:[{v:'28%',l:'Win Probability',gold:false},{v:'#2',l:'Late Speed Rank',gold:false},{v:'+0.6',l:'Speed Change m/s',gold:true},{v:'14.8',l:'Stride Efficiency',gold:false}],
+    text:`Floge is the only proven winner at this exact distance and track in this field. His Jan 1 win at Aqueduct showed a +0.6 m/s speed change and an explosive 7.30s final furlong.<br><br>His stride efficiency of 14.8 is slightly below Luna Moth, but his early speed of 16.2 m/s gives him tactical flexibility. Post 3 is near-ideal for his running style.<br><br>Best exacta partner with Luna Moth — simulations show Floge finishes 2nd in 62% of scenarios where Luna Moth wins.`,
+    bet:'Floge — Exacta with Luna Moth',betsub:'Race 7 · Laurel Park · Jan 23'
+  },
+  foxy:{
+    name:'Foxy Cara',arch:'🎯 The Rail Hunter — Proxy Mode',
+    grid:[{v:'22%',l:'Win Probability',gold:false},{v:'91',l:'Late Pace Figure',gold:false},{v:'+2',l:'Avg Position Gain',gold:true},{v:'100.9m',l:'Extra Distance',gold:false}],
+    text:`Foxy Cara has no GPS data available for this entry — this card uses the <strong>Proxy Model</strong>, estimating GPS-equivalent metrics from traditional pace figures and positional data.<br><br>Her late pace figure of 91 translates to approximately 15.8–16.2 m/s late speed based on our calibration model. Position gain of +2 spots from quarter to stretch is consistent with a late-closing style and minimal ground wasted.<br><br>Confidence interval is wider than GPS cards: estimated 18–26%. Strong trifecta play alongside Luna Moth and Floge.`,
+    bet:'Foxy Cara — Trifecta Box',betsub:'Race 7 · Laurel Park · Jan 23'
+  },
+  lonesome:{
+    name:'Lonesome Road',arch:'🔥 The Hidden Closer — GPS Mode',
+    grid:[{v:'38%',l:'GPS Win Prob.',gold:true},{v:'+30%',l:'Edge vs 12/1',gold:true},{v:'+1.1',l:'Speed Change m/s',gold:false},{v:'Top 10%',l:'Accelerators',gold:false}],
+    text:`This is the retroactive card — what Race IQ would have shown <strong>before</strong> Lonesome Road's Dec 26 win at Laurel Park.<br><br>Traditional data showed: finishes of 7, 2, 7, 2 — wildly inconsistent. Morning line: 12/1 (7.7% implied probability). The odds board missed him completely.<br><br>GPS data showed: <strong>+1.1 m/s speed change</strong>, placing him in the top 10% of all horses tracked at Laurel. Late speed of 16.5 m/s ranked #1 in the field. Stride efficiency held at 14.2 through the final gates.<br><br>Race IQ probability: 38%. Edge over morning line: <strong>+30.3%</strong>. GPS saw the winner that the finish position record had hidden.`,
+    bet:'Lonesome Road — Historical Case',betsub:'Dec 26 · Laurel Park · Race 7'
+  }
+};
+
+function openDetail(horse){
+  const d=details[horse];
+  document.getElementById('dp-name').textContent=d.name;
+  document.getElementById('dp-arch').textContent=d.arch;
+  let gridHtml='<div class="dp-grid">';
+  d.grid.forEach(g=>{gridHtml+=`<div class="dp-stat-box${g.gold?' gold-box':''}"><div class="dp-stat-val${g.gold?' gold':''}">${g.v}</div><div class="dp-stat-lbl">${g.l}</div></div>`;});
+  gridHtml+='</div>';
+  document.getElementById('dp-body').innerHTML=`
+    <div class="dp-section"><div class="dp-sec-title">Key GPS Metrics</div>${gridHtml}</div>
+    <div class="dp-section"><div class="dp-sec-title">Full Analysis</div><div class="dp-text">${d.text}</div></div>
+    <div class="bet-strip"><div class="bet-strip-l"><div class="bet-title">${d.bet}</div><div class="bet-sub">${d.betsub}</div></div><button class="bet-btn" onclick="showToast('Pick added! +25 pts if correct 🏇');closeDetail()">Add Pick</button></div>`;
+  document.getElementById('detail-overlay').classList.add('active');
+}
+function closeDetail(){document.getElementById('detail-overlay').classList.remove('active');}
+
+// ── TOAST ──
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2800);
+}
+</script>
+</body>
+</html>
